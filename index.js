@@ -109,5 +109,6 @@ const clearButton = document.querySelector("button.clear");
 clearButton.addEventListener("click", (event) => {
   mainNumber = 0;
   operand = 0;
+  currentNumberSwitch = true;
   renderToDisplay(mainNumber);
 });
