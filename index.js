@@ -75,6 +75,7 @@ const operationButtons = document.querySelectorAll("button.operation");
 for (const button of operationButtons) {
   button.addEventListener("click", (event) => {
     currentNumberSwitch = false;
+    handleEqual();
     switch (true) {
       case event.currentTarget.dataset.operation === "add":
         currentOperation = OPERATIONS.add;
@@ -100,10 +101,13 @@ function renderToDisplay(toBeRendered) {
 }
 
 const equalButton = document.querySelector("button.equal");
-equalButton.addEventListener("click", (event) => {
+function handleEqual() {
   if (!operand) resultDisplay.textContent = mainNumber;
-  renderToDisplay(operate(currentOperation, mainNumber, operand));
-});
+  mainNumber = operate(currentOperation, mainNumber, operand);
+  renderToDisplay(mainNumber);
+  operand = 0;
+}
+equalButton.addEventListener("click", () => handleEqual());
 
 const clearButton = document.querySelector("button.clear");
 clearButton.addEventListener("click", (event) => {
