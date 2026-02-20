@@ -40,8 +40,74 @@ function operate(operation, number1, number2) {
   }
 }
 
-console.log("Add 2 + 3 =", operate(OPERATIONS.add, 2, 3));
-console.log("Subtract 5 - 2 =", operate(OPERATIONS.subtract, 5, 2));
-console.log("Multiply 4 * 3 =", operate(OPERATIONS.multiply, 4, 3));
-console.log("Divide 10 / 2 =", operate(OPERATIONS.divide, 10, 2));
-console.log("Invalid operation =", operate("UNKNOWN", 1, 1));
+let mainNumber = 0;
+let operand = 0;
+
+let currentOperation = OPERATIONS.add;
+
+const SWITCH_OPTIONS = {
+  mainNumber: true,
+  operand: false,
+};
+let currentNumberSwitch = true;
+
+function appendToNumber(originalNumber, numberToAppend) {
+  return Number(`${String(originalNumber)}${String(numberToAppend)}`);
+}
+
+const numberButtons = document.querySelectorAll("button.number");
+for (const button of numberButtons) {
+  button.addEventListener("click", (event) => {
+    if (currentNumberSwitch === true) {
+      mainNumber = appendToNumber(
+        mainNumber,
+        event.currentTarget.dataset.number,
+      );
+      renderToDisplay(mainNumber);
+    } else if (currentNumberSwitch === false) {
+      operand = appendToNumber(operand, event.currentTarget.dataset.number);
+      renderToDisplay(operand);
+    }
+  });
+}
+
+const operationButtons = document.querySelectorAll("button.operation");
+for (const button of operationButtons) {
+  button.addEventListener("click", (event) => {
+    currentNumberSwitch = false;
+    switch (true) {
+      case event.currentTarget.dataset.operation === "add":
+        currentOperation = OPERATIONS.add;
+        break;
+      case event.currentTarget.dataset.operation === "subtract":
+        currentOperation = OPERATIONS.subtract;
+        break;
+      case event.currentTarget.dataset.operation === "multiply":
+        currentOperation = OPERATIONS.multiply;
+        break;
+      case event.currentTarget.dataset.operation === "divide":
+        currentOperation = OPERATIONS.divide;
+        break;
+      default:
+        console.error("Failed to change operation");
+    }
+  });
+}
+
+const resultDisplay = document.querySelector(".display");
+function renderToDisplay(toBeRendered) {
+  resultDisplay.textContent = toBeRendered;
+}
+
+const equalButton = document.querySelector("button.equal");
+equalButton.addEventListener("click", (event) => {
+  if (!operand) resultDisplay.textContent = mainNumber;
+  renderToDisplay(operate(currentOperation, mainNumber, operand));
+});
+
+const clearButton = document.querySelector("button.clear");
+clearButton.addEventListener("click", (event) => {
+  mainNumber = 0;
+  operand = 0;
+  renderToDisplay(mainNumber);
+});

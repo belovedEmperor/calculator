@@ -10,32 +10,35 @@
   <body>
     <div class="container">
       <div class="display">
-        <p>300.00</p>
+        <p>0</p>
       </div>
       <div class="buttons">
-        <div class="row" data-row="3">
+        <div class="row">
+          <button class="clear">C</button>
+          <button class="operation" data-operation="add">+</button>
+        </div>
+        <div class="row">
           <button class="number" data-number="7">7</button>
           <button class="number" data-number="8">8</button>
           <button class="number" data-number="9">9</button>
-          <button class="operation" data-operation="add">+</button>
+          <button class="operation" data-operation="subtract">-</button>
         </div>
-        <div class="row" data-row="2">
+        <div class="row">
           <button class="number" data-number="4">4</button>
           <button class="number" data-number="5">5</button>
           <button class="number" data-number="6">6</button>
-          <button class="operation" data-operation="subtract">-</button>
+          <button class="operation" data-operation="multiply">×</button>
         </div>
-        <div class="row" data-row="1">
+        <div class="row">
           <button class="number" data-number="1">1</button>
           <button class="number" data-number="2">2</button>
           <button class="number" data-number="3">3</button>
-          <button class="operation" data-operation="multiply">×</button>
-        </div>
-        <div class="row" data-row="0">
-          <button class="" data-number=".">.</button>
-          <button class="number" data-number="0">0</button>
           <button class="operation" data-operation="divide">/</button>
-          <button class="operation" data-operation="equal">=</button>
+        </div>
+        <div class="row">
+          <button class="number" data-number="0">0</button>
+          <button class="" data-number=".">.</button>
+          <button class="equal">=</button>
         </div>
       </div>
     </div>
