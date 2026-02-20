@@ -26,6 +26,10 @@ let operation;
 let userNumber2;
 
 function operate(operation, number1, number2) {
+  if (operation === OPERATIONS.divide && number2 === 0) {
+    return "Really?";
+  }
+
   switch (true) {
     case operation === OPERATIONS.add:
       return add(number1, number2);
@@ -105,14 +109,17 @@ function handleEqual() {
   if (!operand) resultDisplay.textContent = mainNumber;
   mainNumber = operate(currentOperation, mainNumber, operand);
   renderToDisplay(mainNumber);
+  if (typeof mainNumber !== "number") handleClear(false);
   operand = 0;
 }
 equalButton.addEventListener("click", () => handleEqual());
 
 const clearButton = document.querySelector("button.clear");
-clearButton.addEventListener("click", (event) => {
+clearButton.addEventListener("click", () => handleClear(true));
+function handleClear(clearDisplay) {
   mainNumber = 0;
   operand = 0;
   currentNumberSwitch = true;
-  renderToDisplay(mainNumber);
-});
+  currentOperation = OPERATIONS.add;
+  if (clearDisplay) renderToDisplay(mainNumber);
+}
