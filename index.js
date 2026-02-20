@@ -46,6 +46,7 @@ function operate(operation, number1, number2) {
 
 let mainNumber = 0;
 let operand = 0;
+let isDecimal = false;
 
 let currentOperation = OPERATIONS.add;
 
@@ -55,23 +56,44 @@ const SWITCH_OPTIONS = {
 };
 let currentNumberSwitch = true;
 
-function appendToNumber(originalNumber, numberToAppend) {
-  return Number(`${String(originalNumber)}${String(numberToAppend)}`);
+function appendToNumber(originalNumber, numberToAppend, isDecimal) {
+  const originalNumberString = String(originalNumber);
+  if (isDecimal === true) {
+    numberToAppend = `.${numberToAppend}`;
+  }
+  return Number(`${originalNumberString}${numberToAppend}`);
 }
 
 const numberButtons = document.querySelectorAll("button.number");
 for (const button of numberButtons) {
   button.addEventListener("click", (event) => {
+    if (event.currentTarget.dataset.number === ".") {
+      isDecimal = true;
+      renderToDisplay(
+        `${currentNumberSwitch === true ? mainNumber : operand}.`,
+      );
+      return;
+    }
     if (currentNumberSwitch === true) {
+      if (isDecimal === true && String(mainNumber).includes("."))
+        isDecimal = false;
       mainNumber = appendToNumber(
         mainNumber,
         event.currentTarget.dataset.number,
+        isDecimal,
       );
       renderToDisplay(mainNumber);
     } else if (currentNumberSwitch === false) {
-      operand = appendToNumber(operand, event.currentTarget.dataset.number);
+      if (isDecimal === true && String(operand).includes("."))
+        isDecimal = false;
+      operand = appendToNumber(
+        operand,
+        event.currentTarget.dataset.number,
+        isDecimal,
+      );
       renderToDisplay(operand);
     }
+    if (isDecimal === true) isDecimal = false;
   });
 }
 
@@ -99,8 +121,15 @@ for (const button of operationButtons) {
   });
 }
 
-const resultDisplay = document.querySelector(".display");
 function renderToDisplay(toBeRendered) {
+  if (
+    typeof toBeRendered === "number" &&
+    !isNaN(toBeRendered) &&
+    isFinite(toBeRendered) &&
+    !Number.isInteger(toBeRendered)
+  )
+    toBeRendered = Number(parseFloat(toBeRendered).toFixed(6));
+  const resultDisplay = document.querySelector(".display");
   resultDisplay.textContent = toBeRendered;
 }
 
@@ -115,7 +144,6 @@ function handleEqual() {
 equalButton.addEventListener("click", () => handleEqual());
 
 const clearButton = document.querySelector("button.clear");
-clearButton.addEventListener("click", () => handleClear(true));
 function handleClear(clearDisplay) {
   mainNumber = 0;
   operand = 0;
@@ -123,3 +151,4 @@ function handleClear(clearDisplay) {
   currentOperation = OPERATIONS.add;
   if (clearDisplay) renderToDisplay(mainNumber);
 }
+clearButton.addEventListener("click", () => handleClear(true));
