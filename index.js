@@ -47,6 +47,7 @@ function operate(operation, number1, number2) {
 let mainNumber = 0;
 let operand = 0;
 let isDecimal = false;
+let isOperating = false;
 
 let currentOperation = OPERATIONS.add;
 
@@ -67,6 +68,7 @@ function appendToNumber(originalNumber, numberToAppend, isDecimal) {
 const numberButtons = document.querySelectorAll("button.number");
 for (const button of numberButtons) {
   button.addEventListener("click", (event) => {
+    if (isOperating === false) handleClear();
     if (event.currentTarget.dataset.number === ".") {
       isDecimal = true;
       renderToDisplay(
@@ -118,28 +120,18 @@ for (const button of operationButtons) {
       default:
         console.error("Failed to change operation");
     }
+    isOperating = true;
   });
-}
-
-function renderToDisplay(toBeRendered) {
-  if (
-    typeof toBeRendered === "number" &&
-    !isNaN(toBeRendered) &&
-    isFinite(toBeRendered) &&
-    !Number.isInteger(toBeRendered)
-  )
-    toBeRendered = Number(parseFloat(toBeRendered).toFixed(6));
-  const resultDisplay = document.querySelector(".display");
-  resultDisplay.textContent = toBeRendered;
 }
 
 const equalButton = document.querySelector("button.equal");
 function handleEqual() {
-  if (!operand) resultDisplay.textContent = mainNumber;
+  if (!operand) renderToDisplay(mainNumber);
   mainNumber = operate(currentOperation, mainNumber, operand);
   renderToDisplay(mainNumber);
   if (typeof mainNumber !== "number") handleClear(false);
   operand = 0;
+  isOperating = false;
 }
 equalButton.addEventListener("click", () => handleEqual());
 
@@ -152,3 +144,15 @@ function handleClear(clearDisplay) {
   if (clearDisplay) renderToDisplay(mainNumber);
 }
 clearButton.addEventListener("click", () => handleClear(true));
+
+function renderToDisplay(toBeRendered) {
+  if (
+    typeof toBeRendered === "number" &&
+    !isNaN(toBeRendered) &&
+    isFinite(toBeRendered) &&
+    !Number.isInteger(toBeRendered)
+  )
+    toBeRendered = Number(parseFloat(toBeRendered).toFixed(6));
+  const resultDisplay = document.querySelector(".display");
+  resultDisplay.textContent = toBeRendered;
+}
