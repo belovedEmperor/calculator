@@ -68,7 +68,7 @@ function appendToNumber(originalNumber, numberToAppend, isDecimal) {
 const numberButtons = document.querySelectorAll("button.number");
 for (const button of numberButtons) {
   button.addEventListener("click", (event) => {
-    if (isOperating === false) handleClear();
+    if (isOperating === false && currentNumberSwitch === false) handleClear();
     if (event.currentTarget.dataset.number === ".") {
       isDecimal = true;
       renderToDisplay(
